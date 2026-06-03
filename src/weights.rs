@@ -22,16 +22,27 @@ pub struct Cell {
 
 /// All parameters of the `base` `ARModel2` network.
 pub struct Params {
-    pub embedding: Array2<f32>, // (n_locations, embedding_dim)
+    /// Per-location embedding table, `(n_locations, embedding_dim)`.
+    pub embedding: Array2<f32>,
+    /// Preprocess first dense kernel, `(features + embedding_dim, hidden)`.
     pub pre_d0_kernel: Array2<f32>,
+    /// Preprocess first dense bias.
     pub pre_d0_bias: Array1<f32>,
+    /// Preprocess output dense kernel, `(hidden, 2)`.
     pub pre_d1_kernel: Array2<f32>,
+    /// Preprocess output dense bias.
     pub pre_d1_bias: Array1<f32>,
+    /// Encoder RNN cell (reads the context with the lagged target joined in).
     pub cell_pre: Cell,
+    /// Decoder RNN cell (rolls across the forecast horizon).
     pub cell_post: Cell,
+    /// Head first dense kernel, `(hidden, 6)`.
     pub head_d0_kernel: Array2<f32>,
+    /// Head first dense bias.
     pub head_d0_bias: Array1<f32>,
+    /// Head output dense kernel, `(6, 2)` -> the two `eta` channels.
     pub head_d1_kernel: Array2<f32>,
+    /// Head output dense bias.
     pub head_d1_bias: Array1<f32>,
 }
 

@@ -4,6 +4,24 @@
 //! and reproduces the deterministic `predict` forward pass plus negative-binomial
 //! sampling, reading and writing the same tidy CSV contract as the Python model.
 //! Only the `base` architecture is supported.
+//!
+//! # Example
+//!
+//! ```no_run
+//! use std::path::Path;
+//! use chap_ar_predict::{io, LoadedModel, DEFAULT_SEED};
+//!
+//! # fn main() -> anyhow::Result<()> {
+//! let model = LoadedModel::load(Path::new("weights_dir"))?;
+//! let historic = io::read_frame(Path::new("historic.csv"))?;
+//! let future = io::read_frame(Path::new("future.csv"))?;
+//! let forecast = model.predict(&historic, &future, 100, DEFAULT_SEED)?;
+//! io::write_forecast(Path::new("out.csv"), &forecast)?;
+//! # Ok(())
+//! # }
+//! ```
+
+#![warn(missing_docs)]
 
 pub mod config;
 pub mod features;
@@ -32,7 +50,9 @@ pub const DEFAULT_SEED: u64 = 1234;
 
 /// A loaded model: its metadata and network parameters.
 pub struct LoadedModel {
+    /// Model metadata (lengths, scaler, locations) from `meta.json`.
     pub meta: Meta,
+    /// The network parameters from `weights.safetensors`.
     pub params: Params,
 }
 

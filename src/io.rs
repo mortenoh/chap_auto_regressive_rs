@@ -11,10 +11,15 @@ use anyhow::{Context, Result, bail};
 /// One input row.
 #[derive(Debug, Clone)]
 pub struct Row {
+    /// Region identifier.
     pub location: String,
+    /// CHAP time period (`YYYY-MM` or `YYYY-MM-DD/YYYY-MM-DD`).
     pub time_period: String,
+    /// Rainfall covariate.
     pub rainfall: f64,
+    /// Mean temperature covariate.
     pub mean_temperature: f64,
+    /// Population covariate.
     pub population: f64,
     /// Observed cases; `None` when the column is absent, `NaN` when blank.
     pub disease_cases: Option<f64>,
@@ -72,8 +77,11 @@ pub fn read_frame(path: &Path) -> Result<Vec<Row>> {
 /// The forecast output: one row per location and future period.
 #[derive(Debug, Clone)]
 pub struct Forecast {
+    /// The forecast period being labeled.
     pub time_period: String,
+    /// The location being forecast.
     pub location: String,
+    /// The sampled counts for this location and period (one per draw).
     pub samples: Vec<i64>,
 }
 
