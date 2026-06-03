@@ -2,6 +2,8 @@
 name = "chap-ar-predict"
 version = "0.1.0"
 edition = "2024"
+license = "AGPL-3.0"
+description = "Inference-only Rust port of the chap_auto_regressive forecasting model"
 
 [dependencies]
 anyhow = "1.0.102"

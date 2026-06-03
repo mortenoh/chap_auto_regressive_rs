@@ -1,5 +1,8 @@
 # chap-ar-predict
 
+[![checks](https://github.com/mortenoh/chap_auto_regressive_rs/actions/workflows/checks.yml/badge.svg)](https://github.com/mortenoh/chap_auto_regressive_rs/actions/workflows/checks.yml)
+[![license: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 A pure-Rust, inference-only port of the
 [`chap_auto_regressive`](../chap_auto_regressive) forecasting model.
 
