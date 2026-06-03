@@ -1,0 +1,31 @@
+{
+  "rnn_model_name": "base",
+  "context_length": 4,
+  "prediction_length": 2,
+  "n_locations": 2,
+  "embedding_dim": 4,
+  "feature_order": [
+    "rainfall",
+    "mean_temperature",
+    "population",
+    "year_position"
+  ],
+  "scaler": {
+    "mu": [
+      55.79768738544697,
+      25.557510225490187,
+      1500.0,
+      0.4611872146118721
+    ],
+    "std": [
+      26.963979464850894,
+      2.9022589449630165,
+      500.0,
+      0.2883625815907237
+    ]
+  },
+  "locations": [
+    "A",
+    "B"
+  ]
+}
