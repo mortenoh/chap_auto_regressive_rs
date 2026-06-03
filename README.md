@@ -129,6 +129,40 @@ pure Python boot vs ~0.3 s here). **Less compelling** if you already batch many
 predicts inside one long-lived warm Python process (~84 ms each there). Training
 still requires Python/JAX; this port is inference-only.
 
+## Explainability (LIME / SHAP)
+
+Local explainers perturb a single instance and re-run `predict` hundreds to
+thousands of times -- then multiply by locations. Against `predict.py`'s ~1.6 s
+cold start *per process*, that loop is minutes to hours of pure boot. The Rust
+binary's ~millisecond start makes it tractable **without leaving CHAP's
+process-per-call runner contract**: the cold-start floor is what made
+subprocess-per-call painful, not the subprocess itself, so swapping the slow
+Python predict for this binary is enough.
+
+Two design notes specific to this model:
+
+**Perturb features, not locations.** The model carries a learned per-location
+embedding (in `src/model.rs`), keyed to the sorted training locations in
+`meta.json`. A fabricated or perturbed location has no embedding, and
+each real location's response is specific to its own -- so perturbing the location
+axis (the easy way to parallelize) silently produces nonsense for location-
+sensitive models. A valid explanation holds the location identity fixed,
+replicates the target location `N` times, and perturbs only the covariate features
+across the clones.
+
+**That constraint is also the speed-up.** Those `N` feature-perturbed clones share
+one location and one weight set, so they run as a single wide forward pass rather
+than `N` calls. The levers, in order of impact:
+
+1. **Batch the perturbations** into one invocation -- one matmul instead of `N`
+   (the largest win, and language-independent).
+2. **Fast boot** -- the Rust binary has no import or JIT floor to pay per call.
+3. **Parallelize across locations** -- which CHAP's runner already does; each
+   process now boots in milliseconds instead of seconds.
+
+Parallelism is the last multiplier, not the fix: it applies *after* batching and
+fast boot, not instead of them.
+
 ## Develop
 
 ```bash
